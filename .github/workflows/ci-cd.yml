@@ -10,16 +10,13 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Build Docker Image
       run: docker build -t devsecops-app .
 
-    - name: Install Trivy
-      run: |
-        sudo apt-get install wget -y
-        wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.50.1_Linux-64bit.deb
-        sudo dpkg -i trivy_0.50.1_Linux-64bit.deb
-
-    - name: Scan Image for Vulnerabilities
-      run: trivy image devsecops-app
+    - name: Run Trivy Scan
+      uses: aquasecurity/trivy-action@0.24.0
+      with:
+        image-ref: devsecops-app
+        exit-code: '0'
